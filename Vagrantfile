@@ -5,7 +5,7 @@
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  config.vm.box = "dockito/dexbox"
+  config.vm.box = "dockito/devbox"
 
   if (/linux/ =~ RUBY_PLATFORM) != nil
     # Allows chown operations in the shared folders
