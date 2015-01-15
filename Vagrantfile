@@ -6,6 +6,12 @@ VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "dockito/devbox"
+  
+  # CoreOS replaces the authorised_keys on every boot based on its cloud-config file
+  # But Vagrant change its default behavior on 1.7 to to update the authorized_keys with a secure one on the first boot
+  # To allow password-less login, we need this disabled
+  # making feature https://github.com/mitchellh/vagrant/issues/2608#issuecomment-67446310 useless
+  config.ssh.insert_key = false
 
   if (/linux/ =~ RUBY_PLATFORM) != nil
     # Allows chown operations in the shared folders
