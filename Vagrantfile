@@ -21,4 +21,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   else
     config.vm.synced_folder "../", "/vagrant", nfs: true
   end
+
+  # Allows custom provision since each developer has their own preferences
+  # for what should be automatically configured in the vm
+  # (e.g. initial access folder and custom alias)
+  if File.file?("custom-provision.sh")
+    config.vm.provision "shell", path: "custom-provision.sh"
+  end
 end
