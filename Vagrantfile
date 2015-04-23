@@ -20,8 +20,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # Fixes `npm install` execution in containers with volumes
     # Side-effects: node_modules will be created to root users in the host machine
     config.vm.synced_folder "../", "/vagrant", nfs: true, linux__nfs_options: ["no_root_squash", "rw", "no_subtree_check"], mount_options: ['actimeo=1']
+    config.vm.synced_folder "~/.ssh/", "/vault/.ssh", nfs: true, linux__nfs_options: ["no_root_squash", "rw", "no_subtree_check"], mount_options: ['actimeo=1']
   else
     config.vm.synced_folder "../", "/vagrant", nfs: true, mount_options: ['actimeo=1']
+    config.vm.synced_folder "~/.ssh/", "/vault/.ssh", nfs: true, mount_options: ['actimeo=1']
   end
 
   # Allows custom provision since each developer has their own preferences
