@@ -1,0 +1,89 @@
+#cloud-config
+
+hostname: devbox
+
+write_files:
+  - path: /etc/resolv.conf
+    permissions: 0644
+    owner: root
+    content: |
+      nameserver 127.0.0.1
+      nameserver 8.8.8.8
+
+coreos:
+  update:
+    # we don't want our development box rebooting
+    reboot-strategy: off
+  etcd:
+    name: devbox
+  units:
+    - name: etcd.service
+      command: start
+    - name: fleet.service
+      command: start
+
+    - name: dockito-proxy.service
+      command: start
+      enable: true
+      content: |
+        [Unit]
+        Description=Run dockito-proxy
+        After=docker.service
+        Requires=docker.service
+        [Service]
+        KillMode=none
+        User=core
+        Restart=always
+        RestartSec=10s
+        ExecStartPre=/usr/bin/docker pull dockito/proxy:latest
+        ExecStartPre=-/usr/bin/docker rm -f dockito-proxy
+        ExecStart=/usr/bin/docker run --privileged=true --rm --name dockito-proxy -v /data/dockito-proxy/certs:/etc/nginx/certs -v /var/run/docker.sock:/tmp/docker.sock -p 80:80 -p 443:443 dockito/proxy:latest
+        ExecStartPost=-/usr/bin/docker ps -a -q | xargs docker rm
+        ExecStop=/usr/bin/docker kill dockito-proxy
+        ExecStopPost=-/usr/bin/docker ps -a -q | xargs docker rm
+        [Install]
+        WantedBy=local.target
+
+    - name: dockito-dnsmasq.service
+      command: start
+      enable: true
+      content: |
+        [Unit]
+        Description=Run dockito-dnsmasq
+        After=docker.service
+        Requires=docker.service
+        [Service]
+        KillMode=none
+        User=core
+        Restart=always
+        RestartSec=10s
+        ExecStartPre=/usr/bin/docker pull dockito/dnsmasq:latest
+        ExecStartPre=-/usr/bin/docker rm -f dockito-dnsmasq
+        ExecStart=/usr/bin/docker run --rm -p 53:53/udp -p 53:53/tcp --name dockito-dnsmasq dockito/dnsmasq:latest
+        ExecStartPost=-/usr/bin/docker ps -a -q | xargs docker rm
+        ExecStop=/usr/bin/docker kill dockito-dnsmasq
+        ExecStopPost=-/usr/bin/docker ps -a -q | xargs docker rm
+        [Install]
+        WantedBy=local.target
+
+    - name: dockito-vault.service
+      command: start
+      enable: true
+      content: |
+        [Unit]
+        Description=Run dockito-vault
+        After=docker.service
+        Requires=docker.service
+        [Service]
+        KillMode=none
+        User=core
+        Restart=always
+        RestartSec=10s
+        ExecStartPre=/usr/bin/docker pull dockito/vault:latest
+        ExecStartPre=-/usr/bin/docker rm -f dockito-vault
+        ExecStart=/usr/bin/docker run --rm -p 172.17.42.1:14242:3000 -v /vault:/vault --name dockito-vault dockito/vault:latest
+        ExecStartPost=-/usr/bin/docker ps -a -q | xargs docker rm
+        ExecStop=/usr/bin/docker kill dockito-vault
+        ExecStopPost=-/usr/bin/docker ps -a -q | xargs docker rm
+        [Install]
+        WantedBy=local.target
