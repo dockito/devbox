@@ -22,7 +22,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     end
   end
 
-  config.vm.network :private_network, ip: "172.17.8.100"
+  config.vm.network :private_network, ip: "10.10.10.10", netmask: "255.255.255.0"
 
   # CoreOS replaces the authorised_keys on every boot based on its cloud-config file
   # But Vagrant change its default behavior on 1.7 to to update the authorized_keys with a secure one on the first boot
