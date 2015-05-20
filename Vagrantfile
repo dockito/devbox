@@ -37,9 +37,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       # Allows chown operations in the shared folders
       # Fixes `npm install` execution in containers with volumes
       # Side-effects: node_modules will be created to root users in the host machine
-      config.vm.synced_folder host_folder.to_s, guest_folder.to_s, nfs: true, linux__nfs_options: ["no_root_squash", "rw", "no_subtree_check"], mount_options: ['actimeo=1,nolock,vers=3,udp']
+      config.vm.synced_folder host_folder.to_s, guest_folder.to_s, nfs: true, linux__nfs_options: ["no_root_squash", "rw", "no_subtree_check"], mount_options: ['actimeo=1']
     else
-      config.vm.synced_folder host_folder.to_s, guest_folder.to_s, nfs: true, mount_options: ['actimeo=1,nolock,vers=3,udp']
+      config.vm.synced_folder host_folder.to_s, guest_folder.to_s, nfs: true, mount_options: ['actimeo=1']
     end
   end
 
@@ -49,9 +49,16 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     chmod +x /opt/bin/docker-compose
   "
 
+  enable_rpcd = "
+    mkdir -p /etc/conf.d && touch /etc/conf.d/nfs && \
+    systemctl enable rpc-statd.service && \
+    systemctl start rpc-statd.service
+  "
+
   config.vm.provision :file, :source => "#{CLOUD_CONFIG_PATH}", :destination => "/tmp/vagrantfile-user-data"
   config.vm.provision :shell, :inline => "mv /tmp/vagrantfile-user-data /var/lib/coreos-vagrant/", :privileged => true
   config.vm.provision :shell, :inline => install_docker_compose, :privileged => true
+  config.vm.provision :shell, :inline => enable_rpcd, :privileged => true
 
   # Allows custom provision since each developer has their own preferences
   # for what should be automatically configured in the vm
