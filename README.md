@@ -7,7 +7,7 @@
 
 It will sync its parent folder (`Development`), making all your projects available inside the VM at the `/vagrant` folder.
 
-You will have a [CoreOS](http://coreos.com/) install with [Fig](http://fig.sh/) and an [HTTP Proxy](https://github.com/dockito/proxy). For more information on how the image is built, check https://github.com/dockito/devbox-packer.
+You will have a [CoreOS](http://coreos.com/) install with [Compose (former Fig)](https://github.com/docker/compose) and an [HTTP Proxy](https://github.com/dockito/proxy).
 
 
 ## Custom provision
