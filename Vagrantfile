@@ -5,7 +5,7 @@
 VAGRANTFILE_API_VERSION = "2"
 
 CLOUD_CONFIG_PATH = File.join(File.dirname(__FILE__), "user-data")
-$update_channel = "alpha"
+$update_channel = "beta"
 $shared_folders = {
   "../" => "/vagrant",
   "~/.ssh/" => "/vault/.ssh"
