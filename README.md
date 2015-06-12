@@ -19,12 +19,13 @@ Since each developer has their own preferences for what should be automatically 
 ```bash
 # bash_profile on CoreOS is read-only on file system
 # due that we clone the original one and uses this new copy
-unlink /home/vagrant/.bash_profile
-cp /usr/share/skel/.bash_profile /home/vagrant/.bash_profile
+unlink /home/core/.bash_profile
+cp /usr/share/skel/.bash_profile /home/core/.bash_profile
+
 
 # configures bash profile to access the vagrant folder
-# after log into the VM through ssh
+# after log into the vm through ssh
 echo "
-cd /vagrant
-" >> /home/vagrant/.bash_profile
+cd /vagrant/bravi
+" >> /home/core/.bash_profile
 ```
