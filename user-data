@@ -3,6 +3,13 @@
 hostname: devbox
 
 write_files:
+  - path: /etc/systemd/system/docker.service.d/increase-ulimit.conf
+    owner: core:core
+    permissions: 0644
+    content: |
+      [Service]
+      LimitMEMLOCK=infinity
+
   - path: /etc/resolv.conf
     permissions: 0644
     owner: root
@@ -17,6 +24,8 @@ coreos:
   etcd:
     name: devbox
   units:
+    - name: docker.service
+      command: restart
     - name: etcd.service
       command: start
     - name: fleet.service
