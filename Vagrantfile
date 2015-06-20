@@ -4,6 +4,8 @@
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = "2"
 
+VM_MEMORY = "1536"
+
 CLOUD_CONFIG_PATH = File.join(File.dirname(__FILE__), "user-data")
 $update_channel = "beta"
 $shared_folders = {
@@ -20,6 +22,14 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.provider vmware do |v, override|
       override.vm.box_url = "http://%s.release.core-os.net/amd64-usr/current/coreos_production_vagrant_vmware_fusion.json" % $update_channel
     end
+  end
+
+  config.vm.provider :virtualbox do |v|
+    v.customize ["modifyvm", :id, "--memory", VM_MEMORY]
+  end
+
+  config.vm.provider :vmware_fusion do |v|
+    v.vmx["memsize"] = VM_MEMORY
   end
 
   config.vm.network :private_network, ip: "10.10.10.10", netmask: "255.255.255.0"
