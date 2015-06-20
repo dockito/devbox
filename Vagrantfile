@@ -57,6 +57,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.provision :file, :source => "#{CLOUD_CONFIG_PATH}", :destination => "/tmp/vagrantfile-user-data"
   config.vm.provision :shell, :inline => "mv /tmp/vagrantfile-user-data /var/lib/coreos-vagrant/", :privileged => true
+  config.vm.provision :shell, :inline => "coreos-cloudinit --from-file /var/lib/coreos-vagrant/vagrantfile-user-data", :privileged => true
   config.vm.provision :shell, :inline => install_docker_compose, :privileged => true
   config.vm.provision :shell, :inline => enable_rpcd, :privileged => true
 
