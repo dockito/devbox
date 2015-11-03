@@ -9,6 +9,9 @@ It will sync its parent folder (`Development`), making all your projects availab
 
 You will have a [CoreOS](http://coreos.com/) install with [Compose (former Fig)](https://github.com/docker/compose) and an [HTTP Proxy](https://github.com/dockito/proxy).
 
+## Adding Disk Space to Your CoreOS Machine
+
+https://coreos.com/docs/cluster-management/scaling/adding-disk-space/
 
 ## Troubleshooting First Vagrant Up
 
