@@ -58,7 +58,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   install_docker_compose = "
     mkdir -p /opt/bin && \
-    curl -o /opt/bin/docker-compose -L https://github.com/docker/compose/releases/download/1.4.2/docker-compose-`uname -s`-`uname -m` && \
+    curl --progress-bar -o /opt/bin/docker-compose -L https://github.com/docker/compose/releases/download/1.4.2/docker-compose-`uname -s`-`uname -m` && \
     chmod +x /opt/bin/docker-compose
   "
 
