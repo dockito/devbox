@@ -21,13 +21,24 @@ coreos:
   update:
     # we don't want our development box rebooting
     reboot-strategy: off
-  etcd:
+
+  etcd2:
     name: devbox
+    advertise-client-urls: "http://172.17.42.1:2379,http://localhost:4001"
+    listen-client-urls: "http://172.17.42.1:2379,http://localhost:4001"
+    debug: true
+
   units:
     - name: docker.service
       command: restart
+
     - name: etcd.service
+      command: stop
+      enable: false
+
+    - name: etcd2.service
       command: start
+
     - name: fleet.service
       command: start
 
